@@ -1,0 +1,9 @@
+{
+    "compileOnSave": true,
+    "typeAcquisition": {
+        "enable": true,
+        "include": [
+            "mongodb"
+        ]
+    }
+}
