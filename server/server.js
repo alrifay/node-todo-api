@@ -1,52 +1,31 @@
-const mongoose = require('mongoose');
+const express = require('express');
+const bodyParser = require('body-parser');
 
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/TodoApp');
+const mongoose = require('./database/mongoose');
+const Todo = require('./models/Todo');
+const User = require('./models/User');
 
-const Todo = mongoose.model('Todo', {
-    text: {
-        type: String,
-        required: [true, 'Where is your todo?'],
-        minlength: [5, 'To few characters!'],
-        trim: true
-    },
-    completed: {
-        type: Boolean,
-        default: false
-    },
-    completedAt: {
-        type: Number,
-        default: null
-    }
+const app = express();
+
+app.use(bodyParser.json());
+
+app.post('/todos', (request, response) => {
+    const todo = new Todo({
+        text: request.body.text
+    });
+
+    todo.save().then((doc) => {
+        response.send(doc);
+    }, (e) => {
+        let error = {};
+        e = e.errors;
+        for(let item in e){
+            error[item] = e[item].message;
+        }
+        response.status(400).send({error});
+    });
 });
 
-const User = mongoose.model('User', {
-    email: {
-        type: String,
-        required: [true, 'Where is your email?'],
-        minlength: [5, 'Email is not correct!'],
-        validate: {
-            validator(email) {
-                return /[a-zA-z]\w*@\w+\.\w+/.test(email);
-            },
-            msg: 'Email shit'
-        },
-        trim: true
-    }
-});
-// const myTodo = new Todo({
-//     text: ' g  '
-// });
-// myTodo.save().then(doc => {
-//     console.log('todo saved', doc);
-// }, error => {
-//     console.log('error saving todo:', error.errors.text.message);
-// });
-const myUser = new User({
-    email: 'X@cdd.d                '
-});
-myUser.save().then(doc => {
-    console.log('User saved', doc);
-}, error => {
-    console.log('error saving user:', error.errors.email.message);
+app.listen(3000, () => {
+    console.log('Server started at port 3000', 'http://localhost:3000');
 });
