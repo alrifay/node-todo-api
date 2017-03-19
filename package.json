@@ -7,7 +7,7 @@
     "test": "mocha server/**/*.test.js",
     "test:watch": "nodemon --watch server/tests --exec npm test",
     "start": "node server/server.js",
-    "start:watch":"nodemon server/server.js"
+    "start:watch": "nodemon server/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "expect": "^1.20.2",
+    "faker": "^4.1.0",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
     "supertest": "^3.0.0"

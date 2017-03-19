@@ -19,10 +19,22 @@ app.post('/todos', (request, response) => {
     }, (e) => {
         let error = {};
         e = e.errors;
-        for(let item in e){
+        for (let item in e) {
             error[item] = e[item].message;
         }
-        response.status(400).send({error});
+        response.status(400).send({
+            error
+        });
+    });
+});
+
+app.get('/todos', (request, response) => {
+    Todo.find().then((todos) => {
+        response.send({
+            todos
+        });
+    }, (error) => {
+        response.status(400).send(error);
     });
 });
 
