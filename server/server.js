@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
+const {
+    ObjectID
+} = require('mongodb');
 const mongoose = require('./database/mongoose');
 const Todo = require('./models/Todo');
 const User = require('./models/User');
@@ -27,7 +29,26 @@ app.post('/todos', (request, response) => {
         });
     });
 });
-
+app.get('/todos/:id', (request, response) => {
+    if (!ObjectID.isValid(request.params.id)) {
+        return response.status(400).send({
+            error: 'id not valid'
+        });
+    }
+    Todo.findById(request.params.id).then((todo) => {
+        response.status(todo ? 200 : 404).send({
+            todo
+        });
+    }, (e) => {
+        response.status(400).send({
+            error: e
+        });
+    }).catch((e) => {
+        response.status(400).send({
+            error: e
+        });
+    });
+});
 app.get('/todos', (request, response) => {
     Todo.find().then((todos) => {
         response.send({
@@ -37,6 +58,10 @@ app.get('/todos', (request, response) => {
         response.status(400).send(error);
     });
 });
+
+app.use((request, response) => response.status(404).send({
+    error: 'page not found!'
+}));
 
 app.listen(3000, () => {
     console.log('Server started at port 3000', 'http://localhost:3000');
