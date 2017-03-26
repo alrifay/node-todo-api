@@ -31,20 +31,34 @@ app.post('/todos', (request, response) => {
 app.get('/todos/:id', (request, response) => {
     if (!ObjectID.isValid(request.params.id)) {
         return response.status(400).send({
-            error: 'id not valid'
+            error: 'ID not valid'
         });
     }
     Todo.findById(request.params.id).then((todo) => {
         response.status(todo ? 200 : 404).send({
             todo
         });
-    }, (e) => {
-        response.status(400).send({
-            error: e
-        });
     }).catch((e) => {
         response.status(400).send({
             error: e
+        });
+    });
+});
+
+app.delete('/todos/:id', (request, response) => {
+    const id = request.params.id;
+    if (!ObjectID.isValid(id)) {
+        return response.status(400).send({
+            error: 'ID not valid'
+        });
+    }
+    Todo.findByIdAndRemove(id).then((todo) => {
+        response.status(todo ? 200 : 404).send({
+            todo
+        });
+    }).catch((error) => {
+        response.status(400).send({
+            error
         });
     });
 });

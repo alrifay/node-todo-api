@@ -104,7 +104,7 @@ describe('GET /todos/:id', () => {
 
     it('Should return 404 if ID is not valid', (done) => {
         request(app).get('/todos/123').expect(400).expect(response => {
-            expect(response.body.error).toBe('id not valid');
+            expect(response.body.error).toBe('ID not valid');
         }).end(done);
     });
 });
